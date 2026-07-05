@@ -15,7 +15,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(100)->create();
+
+        User::query()->each(function ($user) {
+            // Добавляем префикс, только если его еще нет (чтобы не задвоить при повторном запуске)
+            if (!str_starts_with($user->name, 'ПВ425')) {
+                $user->update([
+                    'name' => 'ПВ425 ' . $user->name
+                ]);
+            }
+        });
 
         $this->call([
             CategorySeeder::class,
