@@ -1,5 +1,6 @@
 <!-- resources/views/components/header.blade.php -->
 <style>
+    
     /* Стили для header - темная тема как в основном layout */
     .header {
         background: #1a202c;
@@ -641,6 +642,90 @@
             padding: 4px 10px;
         }
     }
+
+    /* Стили для блока аутентификации в хедере */
+.header-auth {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 20px;
+}
+
+.header-auth__link {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.header-auth__link:hover {
+    color: #007bff; /* Или твой основной цвет */
+}
+
+.header-auth__link--register {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+.header-auth__link--register:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.header-auth__name {
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.header-auth__logout-form {
+    margin: 0;
+}
+
+.header-auth__logout {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s ease;
+}
+
+.header-auth__logout:hover {
+    color: #a71d2a;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .header-auth {
+        margin-left: 10px;
+        gap: 10px;
+    }
+    
+    .header-auth__link {
+        font-size: 12px;
+    }
+    
+    .header-auth__link--register {
+        padding: 6px 10px;
+    }
+}
+
+
+
+
+
+
 </style>
 
 <header class="header">
@@ -680,23 +765,54 @@
             </form>
         </div>
 
-        <!-- Корзина -->
-        <div class="header-actions">
-            <button class="header-actions__cart" id="cart-toggle">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="header-actions__cart-text">Корзина</span>
-                <span class="header-actions__cart-badge" id="cart-count">0</span>
-            </button>
+       <div class="header-actions">
+    <!-- Корзина -->
+    <button class="header-actions__cart" id="cart-toggle">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="header-actions__cart-text">Корзина</span>
+        <span class="header-actions__cart-badge" id="cart-count">0</span>
+    </button>
 
-            <div class="header-cart-dropdown" id="cart-dropdown">
-                <div class="header-cart-dropdown__items" id="cart-items">
-                    <div class="cart-dropdown__empty">
-                        <i class="fas fa-shopping-cart"></i>
-                        Корзина пуста
-                    </div>
-                </div>
+    <div class="header-cart-dropdown" id="cart-dropdown">
+        <div class="header-cart-dropdown__items" id="cart-items">
+            <div class="cart-dropdown__empty">
+                <i class="fas fa-shopping-cart"></i>
+                Корзина пуста
             </div>
         </div>
+    </div>
+
+    <!-- Блок для ГОСТЕЙ (не вошедших) -->
+    @guest
+        <div class="header-auth guest-auth">
+            <a href="{{ route('login') }}" class="header-auth__link header-auth__link--login">
+                <i class="fas fa-sign-in-alt"></i> Войти
+            </a>
+            <a href="{{ route('register') }}" class="header-auth__link header-auth__link--register">
+                <i class="fas fa-user-plus"></i> Регистрация
+            </a>
+        </div>
+    @endguest
+
+    <!-- Блок для АВТОРИЗОВАННЫХ пользователей -->
+    @auth
+        <div class="header-auth user-auth">
+            <span class="header-auth__name">
+                <i class="fas fa-user"></i> {{ auth()->user()->name }}
+            </span>
+            <form method="POST" action="{{ route('logout') }}" class="header-auth__logout-form">
+                @csrf
+                <button type="submit" class="header-auth__logout">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </button>
+            </form>
+        </div>
+    @endauth
+</div>  
+
+
+
+
 
         <!-- Навигация -->
         <nav class="header-nav">
