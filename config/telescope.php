@@ -180,8 +180,10 @@ return [
             'level' => 'error',
         ],
 
-        Watchers\MailWatcher::class => env('TELESCOPE_MAIL_WATCHER', true),
-
+      Watchers\MailWatcher::class => [
+    'enabled' => env('TELESCOPE_MAIL_WATCHER', true),
+    'intercept' => true, // <-- Это запретит реальную отправку и покажет в Telescope
+],
         Watchers\ModelWatcher::class => [
             'enabled' => env('TELESCOPE_MODEL_WATCHER', true),
             'events' => ['eloquent.*'],
